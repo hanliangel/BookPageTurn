@@ -4,11 +4,17 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.bookpage.hanli.bookpageturn"
-        minSdkVersion 15
+        minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
+        manifestPlaceholders = [
+
+                APPLOG_SCHEME     : "online"
+                ]
     }
     buildTypes {
         release {
@@ -16,6 +22,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {
@@ -27,4 +35,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
     //    implementation project(':readwidget')
     implementation project(':readwidget')
+
+
+    // 字节播放器
+    def ttsdk_version = "1.11.0.4"
+    api "com.bytedanceapi:ttsdk-ttplayer:$ttsdk_version"
+    def applog_version = "5.3.0"
+    implementation "com.bytedance.applog:RangersAppLog-Lite-cn:$applog_version"
+    api 'com.squareup.okhttp3:okhttp:3.0.0'
 }

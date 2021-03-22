@@ -65,7 +65,7 @@ public class TextPageAdapter extends BasePageAdapter {
     @Override
     public void onDraw(int position, Canvas canvas) {
         String pageText = mPageTextList.get(position);
-        StaticLayout staticLayout = new StaticLayout(pageText , mTextPaint , mPageWidth , Layout.Alignment.ALIGN_NORMAL , 1.0f , 0.5f , true);
+        StaticLayout staticLayout = getStaticLayout(pageText , mPageWidth);
         staticLayout.draw(canvas);
     }
 
@@ -75,7 +75,7 @@ public class TextPageAdapter extends BasePageAdapter {
             mPageWidth = pageWidth;
             mPageTextList.clear();
             if(!TextUtils.isEmpty(mText)){
-                StaticLayout staticLayout = new StaticLayout(mText , mTextPaint , pageWidth , Layout.Alignment.ALIGN_NORMAL , 1.0f , 0.5f , true);
+                StaticLayout staticLayout = getStaticLayout(mText , pageWidth);
                 int lineHeight = staticLayout.getLineBottom(0) - staticLayout.getLineTop(0);
                 int pageMaxlineCount = pageHeight / lineHeight;
                 if(staticLayout.getLineCount() > pageMaxlineCount){
@@ -97,6 +97,11 @@ public class TextPageAdapter extends BasePageAdapter {
                 }
             }
         }
+    }
+
+    protected StaticLayout getStaticLayout(String text , int width){
+        StaticLayout staticLayout = new StaticLayout(text , mTextPaint , width , Layout.Alignment.ALIGN_NORMAL , 1.0f , 0.5f , true);
+        return staticLayout;
     }
 
     public void setText(String text){

@@ -13,6 +13,7 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Scroller;
 
 import com.reader.hanli.readwidget.computer.DefaultPointComputer;
@@ -28,7 +29,7 @@ public class MimicPageTurnView extends View {
     /**
      * 翻页动画进行的时间
      */
-    private static final int TURN_PAGE_ANIM_DURATION = 1000;
+    private static final int TURN_PAGE_ANIM_DURATION = 500;
 
     /**
      * 下一页 , 上方按下
@@ -141,7 +142,7 @@ public class MimicPageTurnView extends View {
     }
 
     private void init(Context context, @Nullable AttributeSet attrs){
-        mScroller = new Scroller(context);
+        mScroller = new Scroller(context , new AccelerateInterpolator());
 
         mPaint = new Paint();
         mPaint.setColor(Color.BLACK);
@@ -173,6 +174,7 @@ public class MimicPageTurnView extends View {
             mPageTurnAdapter.onDraw(mCurrentPosition , canvas);
             canvas.restore();
 
+            // 绘制翻页效果
             if(hasNextPage()){
                 if(a != null){
                     Point f = null;
@@ -222,6 +224,8 @@ public class MimicPageTurnView extends View {
                     canvas.clipPath(path2);
                     // 绘制第一页背面，暂时固定一个颜色
                     canvas.drawColor(0xff0000ff);
+
+                    // 绘制阴影
                 }
             }
         }
@@ -229,6 +233,9 @@ public class MimicPageTurnView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(!hasNextPage()){
+            return false;
+        }
         a = new Point((int)event.getX() , (int)event.getY());
         Point currentTouchPoint = new Point((int)event.getX() , (int)event.getY());
         switch (event.getAction()){
@@ -313,6 +320,7 @@ public class MimicPageTurnView extends View {
      * 开始翻页动画
      */
     private void startPageAnim(){
+        endPageAnim();
         switch (mCurrentPageAction){
             case ACTION_NEXT_PAGE_TOP:
                 break;
@@ -366,7 +374,7 @@ public class MimicPageTurnView extends View {
     private void endPageAnim(){
         if(mIsStartAnim){
             mIsStartAnim = false;
-            mLastA = null;
+//            mLastA = null;
             a = null;
             mCurrentPosition = mTurnToPagePosition;
             mCurrentPageAction = -1;
